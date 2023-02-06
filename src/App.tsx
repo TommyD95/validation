@@ -1,25 +1,68 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import { ValidationError } from 'yup';
 import './App.css';
+import { formSchema } from './validation/formValidation';
 
 function App() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isValid, setIsValid] = useState(false);
+
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("function")
+    const schemaForm = {
+      name: name,
+      email: email,
+      password:password
+    }
+    await formSchema.isValid(schemaForm)
+      .then((schema) => setIsValid(schema))
+      .catch((err: ValidationError) => console.log(err.message));
+  };
+
+  useEffect(() => {
+    console.log(isValid)
+  }, [isValid])
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <form  noValidate onSubmit={handleSubmit}>
+      <div>
+        <label >Name:</label>
+        <input
+          type="text"
+          id="name"
+          value={name}
+          onChange={event => setName(event.target.value)}
+        />
+        </div>
+
+      <div>
+        <label >Email:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={event => setEmail(event.target.value)}
+        />
+      </div>
+      <div>
+        <label>Password:</label>
+          <input
+          type="text"
+          id="password"
+          value={password}
+          onChange={event => setPassword(event.target.value)}
+        />
+      </div>
+      <button type="submit">Submit</button>
+      </form>
+      {isValid ? <p>form valido!</p> : <>non valido</>     }
+      </>
   );
 }
 
