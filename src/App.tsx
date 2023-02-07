@@ -60,6 +60,12 @@ function App() {
     }
     if (!formData.email) {
       errors.email = "L'email è obbligatoria";
+    }else if (
+      !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        .test(formData.email)
+    ) {
+      errors.email =
+        "l'email non è valida";
     }
     if (!formData.password) {
       errors.password = "La password è obbligatoria";
